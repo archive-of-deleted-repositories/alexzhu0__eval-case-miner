@@ -1,0 +1,26 @@
+name: eval-case-miner
+one_liner: Mine reusable eval cases from AI failure logs.
+target_user: LLM product engineers
+pain_point: Real failures rarely become repeatable eval fixtures.
+demo_command: PYTHONPATH=src python3 -m eval_case_miner examples/failures.jsonl
+topics:
+  - ai-tools
+  - llmops
+  - evals
+  - testing
+  - cli
+  - developer-tools
+release_channel:
+  - github
+  - relevant-developer-communities
+launch_copy:
+  - I built eval-case-miner: Mine reusable eval cases from AI failure logs.
+  - The pain: Real failures rarely become repeatable eval fixtures.
+  - Try it with: PYTHONPATH=src python3 -m eval_case_miner examples/failures.jsonl
+quality_gate:
+  commands:
+    - python3 -m unittest discover -s tests
+metrics_goal:
+  day_1_stars: 5
+  day_3_stars: 15
+  day_7_stars: 50
