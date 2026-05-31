@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eval-case-miner"
-version = "0.1.0"
+version = "0.1.1"
 description = "Mine reusable eval cases from AI failure logs."
 readme = "README.md"
 requires-python = ">=3.9"

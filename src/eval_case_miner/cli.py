@@ -13,10 +13,11 @@ FAILURE_STATUSES = {"fail", "failed", "failure", "error", "timeout", "rejected"}
 
 def load_jsonl(path: str) -> List[Dict[str, Any]]:
     rows = []
-    for line in Path(path).read_text(encoding="utf-8").splitlines():
+    for line_number, line in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), start=1):
         if line.strip():
             payload = json.loads(line)
             if isinstance(payload, dict):
+                payload["_line"] = line_number
                 rows.append(payload)
     return rows
 
@@ -38,10 +39,33 @@ def mine_cases(path: str) -> List[Dict[str, Any]]:
                 "expected": expected or "Define the expected safe/correct behavior.",
                 "actual": actual,
                 "reason": reason,
+                "source_line": row.get("_line", index),
                 "tags": row.get("tags") or ["mined-failure"],
             }
         )
     return cases
+
+
+def to_promptbeat_cases(cases: List[Dict[str, Any]]) -> Dict[str, Any]:
+    fixtures = []
+    for case in cases:
+        expected = str(case.get("expected") or "").strip()
+        must_contain = [] if expected.startswith("Define the expected") else [expected]
+        fixtures.append(
+            {
+                "id": case["id"],
+                "prompt": case["prompt"],
+                "output": case.get("actual", ""),
+                "must_contain": must_contain,
+                "must_not_contain": [],
+                "tags": case.get("tags", []) + ["promptbeat-lite"],
+                "metadata": {
+                    "reason": case.get("reason", ""),
+                    "source_line": case.get("source_line"),
+                },
+            }
+        )
+    return {"cases": fixtures}
 
 
 def format_text(cases: List[Dict[str, Any]]) -> str:
@@ -51,6 +75,7 @@ def format_text(cases: List[Dict[str, Any]]) -> str:
             [
                 f"## {case['id']}",
                 f"Reason: {case['reason']}",
+                f"Source line: {case['source_line']}",
                 f"Prompt: {case['prompt']}",
                 f"Expected: {case['expected']}",
                 f"Actual: {case['actual']}",
@@ -64,13 +89,15 @@ def run(input_path: str, output_format: str = "text") -> str:
     cases = mine_cases(input_path)
     if output_format == "json":
         return json.dumps({"cases": cases}, indent=2, sort_keys=True)
+    if output_format == "promptbeat":
+        return json.dumps(to_promptbeat_cases(cases), indent=2, sort_keys=True)
     return format_text(cases)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Mine reusable eval cases from AI failure logs.")
     parser.add_argument("input", help="JSONL failure log")
-    parser.add_argument("--format", choices=["text", "json"], default="text")
+    parser.add_argument("--format", choices=["text", "json", "promptbeat"], default="text")
     return parser
 
 

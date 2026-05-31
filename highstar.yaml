@@ -3,6 +3,10 @@ one_liner: Mine reusable eval cases from AI failure logs.
 target_user: LLM product engineers
 pain_point: Real failures rarely become repeatable eval fixtures.
 demo_command: PYTHONPATH=src python3 -m eval_case_miner examples/failures.jsonl
+tier: baseline
+maturity_status: hardened-2026-05-31
+next_release: v0.1.1
+polish_score: 81
 topics:
   - ai-tools
   - llmops
