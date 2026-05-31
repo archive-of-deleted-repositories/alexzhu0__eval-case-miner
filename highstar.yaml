@@ -4,9 +4,9 @@ target_user: LLM product engineers
 pain_point: Real failures rarely become repeatable eval fixtures.
 demo_command: PYTHONPATH=src python3 -m eval_case_miner examples/failures.jsonl
 tier: baseline
-maturity_status: hardened-2026-05-31
-next_release: v0.1.1
-polish_score: 81
+maturity_status: support-aligned-2026-05-31
+next_release: v0.1.2
+polish_score: 83
 topics:
   - ai-tools
   - llmops
@@ -18,9 +18,9 @@ release_channel:
   - github
   - relevant-developer-communities
 launch_copy:
-  - I built eval-case-miner: Mine reusable eval cases from AI failure logs.
-  - The pain: Real failures rarely become repeatable eval fixtures.
-  - Try it with: PYTHONPATH=src python3 -m eval_case_miner examples/failures.jsonl
+  - I built eval-case-miner as the fixture feeder for promptbeat-lite.
+  - It turns real AI failure logs into repeatable prompt regression cases.
+  - Try it with: PYTHONPATH=src python3 -m eval_case_miner examples/failures.jsonl --format promptbeat
 quality_gate:
   commands:
     - python3 -m unittest discover -s tests

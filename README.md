@@ -64,6 +64,12 @@ Use the CLI first. Import the Python functions when you want to embed the same b
 
 It closes the loop from production failures to regression tests.
 
+## Used With
+
+- Feed `--format promptbeat` output directly into `promptbeat-lite`.
+- Mine repeated failures from `agent-trace-summarizer` reports when trace failures become regression cases.
+- Keep this repo as a supporting utility; the main public story is the eval loop around `promptbeat-lite`.
+
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md).
